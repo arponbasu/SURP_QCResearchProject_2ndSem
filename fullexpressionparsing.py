@@ -3,6 +3,19 @@ import sys
 import re
 
 def numpyStringFullFile():
+  """
+Numpy command generating function, entire file :
+numpyStringFullFile():
+Description:-
+Takes a file name , splits it into its individual expressions and generates a numpy command from each one of them using numpyString (exp).
+Parameters:-
+None
+What the function returns:-
+A string representing a program of numpy commands
+Exceptions:-
+This function calls upon numpyString to convert the expressions. Hence avoid any expressions which would also give an exception in numpyString.
+
+  """
   s = sys.argv[1]
   input = open(s,'r').read().strip().replace('\n','')
 
