@@ -120,15 +120,10 @@ Exceptions:-
 The function accepts lists of the format ['b...i', 'ac...jk', 'jk...bc']. Within a string, before the alphabets, spaces make no difference. But don't give spaces in between the alphabets.
   """
 
-  rev = ''   
-  for c in indlist[0]:  
-      rev = c + rev 
-  indlist[0] = rev
-  sep1 = ','
-  sep2 = ''
-  retval = sep1.join(indlist)
+  retval = ','.join(indlist)
   retval = retval + '->'
-  String = sep2.join(indlist)
+  String = ''.join(indlist)
+  rhs = ''
   for i in String:
     count = 0
     for j in String:
@@ -137,8 +132,9 @@ The function accepts lists of the format ['b...i', 'ac...jk', 'jk...bc']. Within
         if count > 1:
             break
     if count == 1:
-        retval = retval + i
-
+        rhs = rhs + i
+  rhs = ''.join(sorted(rhs))
+  retval = retval + rhs
 
   return str(retval)
 
