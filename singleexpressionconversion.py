@@ -100,6 +100,8 @@ def nameTensors (tens, indlist):
                 tens[j] = 'r1'
         elif tens[j] == 'r' and h == 3:
                 tens[j] = 'r2'
+        elif tens[j] == 'v':
+                tens[j] = 'o' * l
     return tens
 
 
