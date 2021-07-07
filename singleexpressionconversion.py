@@ -35,22 +35,6 @@ def uniPerm (exp):
 
 def chop (string, index):
     return (string[:(index-1)] + string[(index+5):])
-'''
-def biPerm (exp):
-  indexList = [i for i, c in enumerate(exp) if c == 'P']
-  count = len(indexList)
-  if count <= 1:
-    return uniPerm(exp)
-  elif count == 2:
-    retval = []
-    retval = retval.append(uniPerm(chop(exp,indexList[1])))
-    u = uniPerm(chop(exp,indexList[0]))
-    u[0][1] *= (-1)
-    u[1][1] *= (-1)
-    retval = retval.append(u[0])
-    retval = retval.append(u[1])
-    return retval
-'''
 
 def biPerm (exp):
   indexList = [i for i, c in enumerate(exp) if c == 'P']
@@ -90,21 +74,21 @@ from collections import Counter
 
 def nameTensors (tens, indlist):
     l = len(tens)
-    for j in range(0,l):
+    for j in range(l):
         h = len(indlist[j])
-        if tens[j] == 't' and h == 2:
-                tens[j] = 't1'
-        elif tens[j] == 't' and h == 4:
-                tens[j] = 't2'
-        elif tens[j] == 'r' and h == 1:
-                tens[j] = 'r1'
-        elif tens[j] == 'r' and h == 3:
-                tens[j] = 'r2'
+        if tens[j] == 't':
+            if h == 2:
+               tens[j] = 't1'
+            elif h == 4: 
+               tens[j] = 't2'
+        elif tens[j] == 'r':
+            if h == 1:
+               tens[j] = 'r1'
+            elif h == 3: 
+               tens[j] = 'r2'
         elif tens[j] == 'v':
-                tens[j] = 'o' * l
+                tens[j] = 'o' * h
     return tens
-
-
 
 def numpyStringBasic (exp, prf):
     exp = uniPerm(exp)[0][0]
@@ -120,7 +104,7 @@ def numpyStringBasic (exp, prf):
     retval = retval + generateEinsumString(indices) + """',"""
     t = nameTensors(tensors,indices)
     l = len(t)-1
-    for i in range(0,l):
+    for i in range(l):
           retval = retval + t[i] + ""","""
     retval = retval + t[l] + """)"""
     
@@ -139,9 +123,11 @@ def numpyString (exp):
  
   l = len(biPerm(exp))
   if l >= 2 :
-    retval = numpyStringBasic(biPerm(exp)[0][0], biPerm(exp)[0][1]) + """ + """
+    initial = biPerm(exp)[0]
+    retval = numpyStringBasic(initial[0], initial[1]) + """ + """
     for i in range(1,l):
-        retval = retval + numpyStringBasic(biPerm(exp)[i][0], biPerm(exp)[i][1]) + """ + """
+        b = biPerm(exp)[i]
+        retval = retval + numpyStringBasic(b[0], b[1]) + """ + """
     return retval[:-3]
   else :
     return numpyStringBasic(exp, prefix)
