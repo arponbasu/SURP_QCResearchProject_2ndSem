@@ -14,7 +14,6 @@ What the function returns:-
 A string representing a program of numpy commands
 Exceptions:-
 This function calls upon numpyString to convert the expressions. Hence avoid any expressions which would also give an exception in numpyString.
-
   """
   s = sys.argv[1]
   input = open(s,'r').read().strip().replace('\n','')
@@ -32,6 +31,7 @@ This function calls upon numpyString to convert the expressions. Hence avoid any
 
   retval = ''
   c = sumorder[0]
+  initial = input[0]
   if c == '-':
           summand = """(-1)*(""" + numpyString(input[0]) + """)"""
   else :
@@ -44,20 +44,23 @@ This function calls upon numpyString to convert the expressions. Hence avoid any
           summand = """(-1)*(""" + numpyString(input[i]) + """)"""
       else :
           summand = numpyString(input[i])
-      
+
+      retval = retval + "#" + input[i] + """\n"""     
       retval = retval + """S += """ + summand + """\n"""
   
-  return retval
+  return retval, initial
 
 
 s = str(sys.argv[1])
 s = s[:-4]
-#print(s)
 f = "GeneratedCodeFor_{}.py".format(s)
 file = open(f,"w") 
- 
+n = numpyStringFullFile()
 file.write("import numpy as np\n")
+file.write("# ")
+file.write(n[1])
+file.write("\n")
 file.write("S = ") 
-file.write(numpyStringFullFile()) 
+file.write(n[0]) 
 
 file.close()
