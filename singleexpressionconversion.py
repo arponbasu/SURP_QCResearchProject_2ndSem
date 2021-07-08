@@ -69,12 +69,24 @@ def generateEinsumString (indlist):
 
   return str(retval)
 
+def transcribe (ind, mode):
+    retval = ''
+    for ite in ind:
+        if ite < 'g':
+            if mode == 'f':
+                retval += 'a'
+            elif mode == 'v':
+                retval += 'v'
+        else:
+            if mode == 'f':
+                retval += 'i'
+            elif mode == 'v':
+                retval += 'o'
+    return retval
 
-from collections import Counter
 
 def nameTensors (tens, indlist):
-    l = len(tens)
-    for j in range(l):
+    for j in range(len(tens)):
         h = len(indlist[j])
         if tens[j] == 't':
             if h == 2:
@@ -87,7 +99,10 @@ def nameTensors (tens, indlist):
             elif h == 3: 
                tens[j] = 'r2'
         elif tens[j] == 'v':
-                tens[j] = 'o' * h
+            tens[j] = transcribe(indlist[j],'v')
+        elif tens[j] == 'f':
+            tens[j] = 'f' + transcribe(indlist[j],'f')
+
     return tens
 
 def numpyStringBasic (exp, prf):
@@ -119,8 +134,8 @@ def numpyStringBasic (exp, prf):
 
 def numpyString (exp):
 
+  
   prefix = fracDeal(exp)[1]
- 
   l = len(biPerm(exp))
   if l >= 2 :
     initial = biPerm(exp)[0]
