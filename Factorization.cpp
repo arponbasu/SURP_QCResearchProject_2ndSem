@@ -57,7 +57,7 @@ void print (const vector<intpairs> &v){
     for(auto x : v){
         cout << "(" << x.first << "," << x.second << ") ";
     }
-    cout << endl;
+    cout << '\n';
 }
 
 void print (const vector<vector<intpairs>> &v1){
@@ -137,7 +137,7 @@ int CantorHash (intpairs &ip1){
 }
 
 
-int cost (string &s1, string &s2){
+int cost (const string &s1, const string &s2){
   string string_union;
   set_union(s1.begin(), s1.end(), s2.begin(), s2.end(), back_inserter(string_union));
   intpairs retval = make_pair(0,0);
@@ -145,6 +145,7 @@ int cost (string &s1, string &s2){
     if (string_union[i] < 'g') retval.second += 1;
     else retval.first += 1;
   }
+  retval.second -= 1;
   return CantorHash(retval);
 }
 
@@ -172,12 +173,11 @@ traverseLog traverse (const vector<string> &ind){
         int price = 0;
         auto tempvec = ind;
         for (auto y : x){
-
             price = max(price,cost(tempvec[y.first],tempvec[y.second]));
-            //cout << price << endl;
+            //cout << price << '\n';
             tempvec = reduce(tempvec,y);
             //print(tempvec);
-            //cout << endl;
+            //cout << '\n';
             vvs.push_back(tempvec);
         }
 
