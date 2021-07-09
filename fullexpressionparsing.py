@@ -32,6 +32,7 @@ This function calls upon numpyString to convert the expressions. Hence avoid any
   retval = ''
   c = sumorder[0]
   initial = input[0]
+  initsign = sumorder[0]
   if c == '-':
           summand = """(-1)*(""" + numpyString(input[0]) + """)"""
   else :
@@ -45,10 +46,10 @@ This function calls upon numpyString to convert the expressions. Hence avoid any
       else :
           summand = numpyString(input[i])
 
-      retval = retval + "#" + input[i] + """\n"""     
+      retval = retval + "# " + c + input[i] + """\n"""     
       retval = retval + """S += """ + summand + """\n"""
   
-  return retval, initial
+  return retval, initial, initsign
 
 
 s = str(sys.argv[1])
@@ -58,6 +59,8 @@ file = open(f,"w")
 n = numpyStringFullFile()
 file.write("import numpy as np\n")
 file.write("# ")
+file.write(n[2])
+file.write(" ")
 file.write(n[1])
 file.write("\n")
 file.write("S = ") 
