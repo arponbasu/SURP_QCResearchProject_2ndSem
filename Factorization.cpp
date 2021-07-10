@@ -1,6 +1,6 @@
 /**
-    Generates the cheapest contraction for a given index sequence along with the corresponding
-    sequences.
+    Generates the cheapest contraction(s) for a given index sequence along with their respective
+    costs in the big -O notation.
     @file Factorization.cpp
     @author Arpon Basu
 */
@@ -54,12 +54,12 @@ void displayAsOV (const intpairs &ip){
 }
 
 /**
-    A print function for displaying vectors of strings. The function is overloaded
+    A display function for displaying vectors of strings. The function is overloaded
     for 5 different data types below.
     @param a certain data type to be inferred by the compiler based on the function call.
     @return void
 */
-void print (const vector<string> &vs){
+void display (const vector<string> &vs){
   cout << "[";
   int l = vs.size() - 1;
   for(int i = 0; i < l; i++){
@@ -68,37 +68,37 @@ void print (const vector<string> &vs){
   cout << vs[l] << "]";
 }
 
-void print (const vector<vector<string>> &vvs){
+void display (const vector<vector<string>> &vvs){
   cout << "[";
   int l = vvs.size() - 1;
   for(int i = 0; i < l; i++){
-    print(vvs[i]);
+    display(vvs[i]);
     cout << ", ";
   }
-  print(vvs[l]);
+  display(vvs[l]);
   cout << "]\n";
 
 }
 
 
-void print (const traverseLog &t){
+void display (const traverseLog &t){
   for(auto x : t){
     auto vvs = x.second;
     displayAsOV(reverseCantorHash(x.first));
     cout << " : ";
-    print(vvs);
+    display(vvs);
   }
 }
 
-void print (const vector<intpairs> &v){
+void display (const vector<intpairs> &v){
     for(auto x : v){
         cout << "(" << x.first << "," << x.second << ") ";
     }
     cout << '\n';
 }
 
-void print (const vector<vector<intpairs>> &v1){
-    for(auto x : v1) print(x);
+void display (const vector<vector<intpairs>> &v1){
+    for(auto x : v1) display(x);
 }
 
 /**
@@ -145,7 +145,7 @@ return s;
 
 /**
     For generating the vector of all pairs of integers from 0 to n - 1.
-    @param an integer greater than 1
+    @param an integer > 1
     @return a vector of pairs of whole numbers
 */
 vector<intpairs> pairsTilln (int &n){
@@ -160,7 +160,7 @@ vector<intpairs> pairsTilln (int &n){
 /**
     For generating the cartesian products of all the vectors pairsTilln(n), ..., pairsTilln(2).
     Reference :- https://stackoverflow.com/questions/5279051/how-can-i-create-cartesian-product-of-vector-of-vectors
-    @param an integer greater than 1
+    @param an integer > 1
     @return a vector of vectors of pairs of whole numbers
 */
 vector<vector<intpairs>> cartesianProduct (int n){
@@ -210,7 +210,7 @@ int cost (const string &s1, const string &s2){
     @param a vector of strings and a pair of integers
     @return a vector of strings
 */
-vector<string> reduce (vector<string> &vec, intpairs &ip){
+vector<string> reduction (vector<string> &vec, intpairs &ip){
   int f = ip.first;
   int s = ip.second;
   auto s1 = vec[f];
@@ -234,7 +234,7 @@ traverseLog traverse (const vector<string> &ind){
     auto c = cartesianProduct(ind.size());
 
     //auto x = c[179];
-    //print(x);
+    //display(x);
     for(auto x : c){
         vector<vector<string>> vvs;
         vvs.push_back(ind);
@@ -243,8 +243,8 @@ traverseLog traverse (const vector<string> &ind){
         for (auto y : x){
             price = max(price,cost(tempvec[y.first],tempvec[y.second]));
             //cout << price << '\n';
-            tempvec = reduce(tempvec,y);
-            //print(tempvec);
+            tempvec = reduction(tempvec,y);
+            //display(tempvec);
             //cout << '\n';
             vvs.push_back(tempvec);
         }
@@ -295,7 +295,7 @@ vector<string> processArgument(int argc, const char** argv){
 int main(int argc, const char** argv) {
   //auto start = chrono::high_resolution_clock::now();
 
-  print(keepMinimum(traverse(processArgument(argc,argv))));
+  display(keepMinimum(traverse(processArgument(argc,argv))));
 
   //auto stop = chrono::high_resolution_clock::now();
   //auto duration = chrono::duration_cast<chrono::microseconds>(stop - start);
