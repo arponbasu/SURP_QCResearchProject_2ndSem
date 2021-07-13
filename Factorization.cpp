@@ -21,7 +21,8 @@ typedef vector<pivvs> traverseLog;
 int CantorHash (intpairs &ip1){
   int m = ip1.first;
   int n = ip1.second;
-  return (n + (m + n)*(m + n + 1)/2);
+  int x = (m + n)*(m + n + 1);
+  return (n + (x >> 1));
 }
 
 
@@ -33,8 +34,8 @@ int CantorHash (intpairs &ip1){
     @return pair of whole numbers
 */
 intpairs reverseCantorHash (int n){
-  int w = floor(0.5*(sqrt(8*n+1)-1));
-  int t = (w*w + w)/2;
+  int w = floor(0.5*(sqrt(1+(n<<3))-1));
+  int t = (w*w + w) >> 1;
   int y = n - t;
   int x = w - y;
   return make_pair(x,y);
@@ -62,9 +63,7 @@ void displayAsOV (const intpairs &ip){
 void display (const vector<string> &vs){
   cout << "[";
   int l = vs.size() - 1;
-  for(int i = 0; i < l; i++){
-    cout << vs[i] << ", ";
-  }
+  for(int i = 0; i < l; i++) cout << vs[i] << ", ";
   cout << vs[l] << "]";
 }
 
@@ -77,7 +76,6 @@ void display (const vector<vector<string>> &vvs){
   }
   display(vvs[l]);
   cout << "]\n";
-
 }
 
 
@@ -91,9 +89,7 @@ void display (const traverseLog &t){
 }
 
 void display (const vector<intpairs> &v){
-    for(auto x : v){
-        cout << "(" << x.first << "," << x.second << ") ";
-    }
+    for(auto x : v) cout << "(" << x.first << "," << x.second << ") ";
     cout << '\n';
 }
 
@@ -117,7 +113,7 @@ string condense (string &s1, string &s2){
         if (String[i] == String[j]) count += 1;
         if (count > 1) break;
       }
-      if (count == 1) rhs = rhs + String[i];
+      if (count == 1) rhs += String[i];
 
    }
   sort(rhs.begin(), rhs.end());
@@ -131,12 +127,11 @@ string condense (string &s1, string &s2){
 */
 vector<intpairs> makePairs (vector<int> &ind){
   vector<intpairs> s;
-  for (long unsigned int i = 0; i < ind.size() - 1; i++) {
-		for (long unsigned int j = i + 1; j < ind.size(); j++) {
-
+  long unsigned int leng = ind.size();
+  for (long unsigned int i = 0; i < leng - 1; i++) {
+		for (long unsigned int j = i + 1; j < leng; j++) {
 				intpairs x = make_pair(ind[i], ind[j]);
 				s.push_back(x);
-
 		}
 	}
 
@@ -150,9 +145,7 @@ return s;
 */
 vector<intpairs> pairsTilln (int &n){
   vector<int> v;
-  for(int i = 0; i < n; i++){
-    v.push_back(i);
-  }
+  for(int i = 0; i < n; i++) v.push_back(i);
   return makePairs(v);
 }
 
@@ -194,13 +187,16 @@ return s;
 */
 int cost (const string &s1, const string &s2){
   string string_union;
-  set_union(s1.begin(), s1.end(), s2.begin(), s2.end(), back_inserter(string_union));
+  string temp1 = s1, temp2 = s2;
+  sort(temp1.begin(), temp1.end());
+  sort(temp2.begin(), temp2.end());
+  set_union(temp1.begin(), temp1.end(), temp2.begin(), temp2.end(), back_inserter(string_union));
   intpairs retval = make_pair(0,0);
   for(long unsigned int i = 0; i < string_union.size(); i++){
     if (string_union[i] < 'g') retval.second += 1;
     else retval.first += 1;
   }
-  retval.second -= 1;
+
   return CantorHash(retval);
 }
 
@@ -232,9 +228,6 @@ vector<string> reduction (vector<string> &vec, intpairs &ip){
 traverseLog traverse (const vector<string> &ind){
     traverseLog t;
     auto c = cartesianProduct(ind.size());
-
-    //auto x = c[179];
-    //display(x);
     for(auto x : c){
         vector<vector<string>> vvs;
         vvs.push_back(ind);
@@ -242,13 +235,9 @@ traverseLog traverse (const vector<string> &ind){
         auto tempvec = ind;
         for (auto y : x){
             price = max(price,cost(tempvec[y.first],tempvec[y.second]));
-            //cout << price << '\n';
             tempvec = reduction(tempvec,y);
-            //display(tempvec);
-            //cout << '\n';
             vvs.push_back(tempvec);
         }
-
         pivvs p = make_pair(price, vvs);
         t.push_back(p);
     }
@@ -267,10 +256,7 @@ traverseLog keepMinimum (const traverseLog &t){
   sort(copy.begin(),copy.end());
   int iter, c = copy.size(), min = copy[0].first;
 
-  for(iter = 0; iter < c; iter++){
-    if(copy[iter].first > min) break;
-  }
-
+  for(iter = 0; iter < c; iter++) if(copy[iter].first > min) break;
   for(int i = copy.size() - 1; i >= iter; i--) copy.pop_back();
   return copy;
 }
@@ -293,13 +279,14 @@ vector<string> processArgument(int argc, const char** argv){
 
 
 int main(int argc, const char** argv) {
-  //auto start = chrono::high_resolution_clock::now();
+
+  auto start = chrono::high_resolution_clock::now();
 
   display(keepMinimum(traverse(processArgument(argc,argv))));
 
-  //auto stop = chrono::high_resolution_clock::now();
-  //auto duration = chrono::duration_cast<chrono::microseconds>(stop - start);
-  //cout << duration.count() << endl;
+  auto stop = chrono::high_resolution_clock::now();
+  auto duration = chrono::duration_cast<chrono::microseconds>(stop - start);
+  cout << "The program took " << duration.count() << " microseconds to execute.\n";
 
 
 return 0;
