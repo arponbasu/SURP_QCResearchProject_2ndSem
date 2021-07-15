@@ -124,9 +124,9 @@ The function accepts lists of the format ['b...i', 'ac...jk', 'jk...bc']. Within
         if count > 1:
             break
     if count == 1:
-        rhs = rhs + i
+        rhs += i
   rhs = ''.join(sorted(rhs))
-  retval = retval + rhs
+  retval += rhs
 
   return str(retval)
 
@@ -209,12 +209,12 @@ This function calls upon biPerm to convert the expression for further modificati
     t = nameTensors(tensors,indices)
     l = len(t)-1
     for i in range(l):
-          retval = retval + t[i] + ""","""
-    retval = retval + t[l] + """)"""
+          retval += t[i] + ""","""
+    retval += t[l] + """)"""
     
     if prf != 1 and prf != -1:
       c = str(prf)
-      retval = retval + """/(""" + c + """)"""
+      retval += """/(""" + c + """)"""
     elif prf == -1:
       retval = """(-1)*""" + retval
 
@@ -241,7 +241,7 @@ This function calls upon numpyStringBasic to convert the expression for further 
     retval = numpyStringBasic(initial[0], initial[1]) + """ + """
     for i in range(1,l):
         b = biPerm(exp)[i]
-        retval = retval + numpyStringBasic(b[0], b[1]) + """ + """
+        retval += numpyStringBasic(b[0], b[1]) + """ + """
     return retval[:-3]
   else :
     return numpyStringBasic(exp, prefix)
