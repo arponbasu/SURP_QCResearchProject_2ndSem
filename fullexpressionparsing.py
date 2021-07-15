@@ -25,7 +25,7 @@ This function calls upon numpyString to convert the expressions. Hence avoid any
   input = [x for x in input if x != '']
 
   if len(sumorder) + 1 == len(input):
-        sumorder = ['+'] + sumorder
+        sumorder += ['+']
   elif len(sumorder) != len(input):
         print("There seems to be some discrepancy vis-a-vis your addition and/or subtraction symbols.")
 
@@ -38,7 +38,7 @@ This function calls upon numpyString to convert the expressions. Hence avoid any
   else :
           summand = numpyString(input[0])
       
-  retval = retval + summand + """\n"""
+  retval += summand + """\n"""
   for i in range(1,len(input)):
       c = sumorder[i]
       if c == '-':
@@ -46,8 +46,8 @@ This function calls upon numpyString to convert the expressions. Hence avoid any
       else :
           summand = numpyString(input[i])
 
-      retval = retval + "# " + c + input[i] + """\n"""     
-      retval = retval + """S += """ + summand + """\n"""
+      retval += "# " + c + input[i] + """\n"""     
+      retval += """S{} = """.format(i) + summand + """\n"""
   
   return retval, initial, initsign
 
