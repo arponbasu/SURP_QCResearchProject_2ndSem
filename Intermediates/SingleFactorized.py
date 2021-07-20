@@ -99,6 +99,34 @@ def transcribe (ind, mode):
                 retval += 'o'
     return retval
 
+def charHash (c):
+    if c == 'f':
+        return 1
+    elif c == 'v':
+        return 2
+    elif c == 't':
+        return 3
+    elif c == 'r':
+        return 4
+
+def reversecharHash (n):
+    if n == 1:
+        return 'f'
+    elif n == 2:
+        return 'v'
+    elif n == 3:
+        return 't'
+    elif n == 4:
+        return 'r'
+
+
+
+def sortShuffle (tens, indlist):
+    temp = [charHash(c) for c in tens]
+    lz = list(zip(*sorted(zip(temp, indlist))))
+    rt1 = [reversecharHash(n) for n in lz[0]]
+    return rt1, lz[1]
+
 
 def nameTensors (tens, indlist):
     for j in range(len(tens)):
@@ -126,6 +154,9 @@ def generatecppInput (exp,prf):
     for individual in ((uniPerm(exp)[0][0]).replace('}_{','').split()):
         indices.append(individual[individual.find('{') + 1:individual.rfind('}')])
         tensors.append(individual[:individual.find('^')])
+    ss = sortShuffle (tensors, indices)
+    tensors = ss[0]
+    indices = ss[1]  
     return (collateList(indices) + "|" + collateList(nameTensors(tensors,indices)) + "|" + str(prf))
 
 

@@ -110,23 +110,31 @@ for(long unsigned int j = 0; j < v1.size(); j++){
 return make_pair(v[0],v[1]);
 }
 
-long long fcounter = -1;
-int cnt = 1;
+long long fcounter = -1; //global counter variable
+int cnt = 1; //global counter variable
 string writeCode (vector<vector<string>> &vvs, const vector<string> &tens, const string &coeff){
 fcounter++;
 if(tens.size() > 1){
     string retval;
     vector<string> temp = tens;
-
+    int start = cnt;
     long unsigned int i;
     for(i = 0; i < vvs.size() - 2; i++){
     auto vvsi = vvs[i], vvsi1 = vvs[i+1];
     auto m = missingIndices(vvsi,vvsi1);
     auto fir = m.first, sec = m.second;
     auto tscn = to_string(cnt);
+    
+    if(temp[sec][0] == 't' || temp[sec][0] == 'r'){
+      retval += "I" + tscn + " = np.einsum('" + vvsi[fir] + "," + vvsi[sec] + "->" +
+      vvsi1[vvsi1.size()-1] + "'," + temp[fir] + "," + temp[sec] + ")\n";//ORIGINAL
+    }
+    else{
+      retval += "I" + tscn + " = np.einsum('" + vvsi[sec] + "," + vvsi[fir] + "->" +
+      vvsi1[vvsi1.size()-1] + "'," + temp[sec] + "," + temp[fir] + ")\n";
+    }
 
-    retval += "I" + tscn + " = " + "np.einsum('" + vvsi[fir] + "," + vvsi[sec] + "->" +
-    vvsi1[vvsi1.size()-1] + "'," + temp[fir] + "," + temp[sec] + ")\n";
+
 
     temp[fir] = "";
     temp[sec] = "";
@@ -137,17 +145,30 @@ if(tens.size() > 1){
     cnt++;
 
     }
+    int end = cnt;
     auto vvsi = vvs[i], vvsi1 = vvs[i+1];
     auto m = missingIndices(vvsi,vvsi1);
     auto fir = m.first, sec = m.second;
     auto tsc = to_string(fcounter);
-    retval += "F" + tsc + " = np.einsum('" + vvsi[fir] + "," + vvsi[sec] + "->" +
-    vvsi1[vvsi1.size()-1] + "'," + temp[fir] + "," + temp[sec] + ")\n";
+
+    if(temp[sec][0] == 't' || temp[sec][0] == 'r'){
+      retval += "F" + tsc + " = np.einsum('" + vvsi[fir] + "," + vvsi[sec] + "->" +
+      vvsi1[vvsi1.size()-1] + "'," + temp[fir] + "," + temp[sec] + ")\n";//ORIGINAL
+    }
+    else{
+      retval += "F" + tsc + " = np.einsum('" + vvsi[sec] + "," + vvsi[fir] + "->" +
+      vvsi1[vvsi1.size()-1] + "'," + temp[sec] + "," + temp[fir] + ")\n";
+    }
+
+
     if(coeff != "1.0"){
       if(coeff == "-1.0") retval += "F" + tsc + " *= (-1)\n";
       else retval += "F" + tsc + " /= (" + coeff + ")\n";
     }
-
+    if(fcounter == 0) retval += "S = F0\n";
+    else retval += "S += F" + tsc + "\n";
+    for(int i = start; i < end; i++) retval += "I" + to_string(i) + " = None; ";
+    retval += "F" + tsc + " = None;\n";
     return retval;
     }
     else{
@@ -159,6 +180,9 @@ if(tens.size() > 1){
           if(coeff == "-1.0") retval += "F" + tsc + " *= (-1)\n";
           else retval += "F" + tsc + " /= (" + coeff + ")\n";
         }
+        if(fcounter == 0) retval += "S = F0\n";
+        else retval += "S += F" + tsc + "\n";
+        retval += "F" + tsc + " = None;\n";
         return retval;
     }
 
@@ -171,17 +195,11 @@ string retval = "import numpy as np\n";
 auto x = apc[num];
 long unsigned int xs = x.size();
 for(long unsigned int i = 0; i < xs; i++) retval += writeCode(x[i],tensors[i],coeff[i]);
-retval += "S = ";
-long unsigned int j;
-for(j = 0; j < xs - 1; j++) retval += "F" + to_string(j) + " + ";
-retval += "F" + to_string(j);
 return retval;
 }
 
 
 int main(int argc, const char** argv) {
-
-
   string s(argv[1]);
   ios_base::sync_with_stdio(false);
   cin.tie(NULL);

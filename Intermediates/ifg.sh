@@ -7,15 +7,10 @@ PYTHON_INPUT_FILE=$1
 clear
 echo "Welcome to Intermediate Code Generation program"
 echo "=================================="
-echo "$(date '+%Y-%m-%d %H:%M:%S')===> Starting Run with input file $PYTHON_INPUT_FILE"
+echo "$(date '+%Y-%m-%d %H:%M:%S') ===> Starting run with input file $PYTHON_INPUT_FILE"
 
 
 PYTHON_SCRIPT_NAME="FullFactorized.py"
-
-
-#echo $1
-
-
 
 PREFIX="temp_"
 CPP_INPUT_FILE="{$PREFIX}{$PYTHON_INPUT_FILE}"
@@ -33,8 +28,9 @@ echo "Running C++ code"
 
 
 echo "Run Complete. Removing $CPP_INPUT_FILE"
+#echo "Run Complete"
 
 rm -f $CPP_INPUT_FILE
 
-echo "$(date '+%Y-%m-%d %H:%M:%S')===> Run Successful"
+echo "$(date '+%Y-%m-%d %H:%M:%S') ===> Run Successful"
 echo "==============================================="
