@@ -47,7 +47,7 @@ This function calls upon numpyString to convert the expressions. Hence avoid any
           summand = numpyString(input[i])
 
       retval += "# " + c + input[i] + """\n"""     
-      retval += """S{} = """.format(i) + summand + """\n"""
+      retval += """S += """.format(i) + summand + """\n"""
   
   return retval, initial, initsign
 
