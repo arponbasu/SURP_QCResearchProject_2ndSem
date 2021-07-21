@@ -119,31 +119,28 @@ if(tens.size() > 1){
     vector<string> temp = tens;
     int start = cnt;
     long unsigned int i;
+    retval += "start_time = datetime.datetime.now()\n";
     for(i = 0; i < vvs.size() - 2; i++){
-    auto vvsi = vvs[i], vvsi1 = vvs[i+1];
-    auto m = missingIndices(vvsi,vvsi1);
-    auto fir = m.first, sec = m.second;
-    auto tscn = to_string(cnt);
-    
-    if(temp[sec][0] == 't' || temp[sec][0] == 'r'){
-      retval += "I" + tscn + " = np.einsum('" + vvsi[fir] + "," + vvsi[sec] + "->" +
-      vvsi1[vvsi1.size()-1] + "'," + temp[fir] + "," + temp[sec] + ")\n";//ORIGINAL
-    }
-    else{
-      retval += "I" + tscn + " = np.einsum('" + vvsi[sec] + "," + vvsi[fir] + "->" +
-      vvsi1[vvsi1.size()-1] + "'," + temp[sec] + "," + temp[fir] + ")\n";
-    }
+      auto vvsi = vvs[i], vvsi1 = vvs[i+1];
+      auto m = missingIndices(vvsi,vvsi1);
+      auto fir = m.first, sec = m.second;
+      auto tscn = to_string(cnt);
 
+      if(temp[sec][0] == 't' || temp[sec][0] == 'r'){
+        retval += "I" + tscn + " = np.einsum('" + vvsi[fir] + "," + vvsi[sec] + "->" +
+        vvsi1[vvsi1.size()-1] + "'," + temp[fir] + "," + temp[sec] + ")\n";//ORIGINAL
+      }
+      else{
+        retval += "I" + tscn + " = np.einsum('" + vvsi[sec] + "," + vvsi[fir] + "->" +
+        vvsi1[vvsi1.size()-1] + "'," + temp[sec] + "," + temp[fir] + ")\n";
+      }
 
+      temp[fir] = "";
+      temp[sec] = "";
+      temp.push_back("I" + tscn);
+      temp.erase(remove(temp.begin(), temp.end(), ""), temp.end());
 
-    temp[fir] = "";
-    temp[sec] = "";
-    temp.push_back("I" + tscn);
-    temp.erase(remove(temp.begin(), temp.end(), ""), temp.end());
-
-
-    cnt++;
-
+      cnt++;
     }
     int end = cnt;
     auto vvsi = vvs[i], vvsi1 = vvs[i+1];
@@ -167,6 +164,9 @@ if(tens.size() > 1){
     }
     if(fcounter == 0) retval += "S = F0\n";
     else retval += "S += F" + tsc + "\n";
+    retval += "end_time = datetime.datetime.now(); ";
+    string message = "print('The time taken to evaluate F" + tsc + " has been ',";
+    retval += (message + "int((end_time - start_time).total_seconds() * 1000), ' milliseconds.')\n");
     for(int i = start; i < end; i++) retval += "I" + to_string(i) + " = None; ";
     retval += "F" + tsc + " = None;\n";
     return retval;
@@ -174,6 +174,7 @@ if(tens.size() > 1){
     else{
         string retval;
         auto tsc = to_string(fcounter);
+        retval += "start_time = datetime.datetime.now()\n";
         retval += "F" + tsc + " = np.einsum('" + vvs[0][0] + "->" +
         vvs[0][0] + "'," + tens[0] + ")\n";
         if(coeff != "1.0"){
@@ -182,6 +183,9 @@ if(tens.size() > 1){
         }
         if(fcounter == 0) retval += "S = F0\n";
         else retval += "S += F" + tsc + "\n";
+        retval += "end_time = datetime.datetime.now(); ";
+        string message = "print('The time taken to evaluate F" + tsc + " has been ',";
+        retval += (message + "int((end_time - start_time).total_seconds() * 1000), ' milliseconds.')\n");
         retval += "F" + tsc + " = None;\n";
         return retval;
     }
@@ -191,7 +195,7 @@ if(tens.size() > 1){
 string writeCodeFullFile (vector<string> &ind, vector<string> &tens, vector<string> &coeff, int num = 0){
 auto tensors = obtainIndlist(tens);
 auto apc = allPossibleContractions(collateReducedTraverseLogsTest(ind));//apc is vrtl.
-string retval = "import numpy as np\n";
+string retval = "import numpy as np\nimport datetime\n";
 auto x = apc[num];
 long unsigned int xs = x.size();
 for(long unsigned int i = 0; i < xs; i++) retval += writeCode(x[i],tensors[i],coeff[i]);
@@ -218,7 +222,7 @@ int main(int argc, const char** argv) {
   for(int i = 0; i < 4; i++) s.pop_back();
   size_t position = s.find("_");
   s.erase(s.begin(), s.begin()+position+1);
-  s = "code_" + s + ".py";
+  s = "IntermediatesEvaluation_" + s + ".py";
 
   ofstream fs(s);
 
