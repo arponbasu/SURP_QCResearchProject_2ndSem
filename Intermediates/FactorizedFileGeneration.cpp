@@ -112,6 +112,8 @@ return make_pair(v[0],v[1]);
 
 long long fcounter = -1; //global counter variable
 int cnt = 1; //global counter variable
+int timer_switch; //global switch variable
+string start_messg = "start_time = datetime.datetime.now()\n";
 string writeCode (vector<vector<string>> &vvs, const vector<string> &tens, const string &coeff){
 fcounter++;
 if(tens.size() > 1){
@@ -119,7 +121,7 @@ if(tens.size() > 1){
     vector<string> temp = tens;
     int start = cnt;
     long unsigned int i;
-    retval += "start_time = datetime.datetime.now()\n";
+    if(timer_switch) retval += start_messg;
     for(i = 0; i < vvs.size() - 2; i++){
       auto vvsi = vvs[i], vvsi1 = vvs[i+1];
       auto m = missingIndices(vvsi,vvsi1);
@@ -164,9 +166,11 @@ if(tens.size() > 1){
     }
     if(fcounter == 0) retval += "S = F0\n";
     else retval += "S += F" + tsc + "\n";
-    retval += "end_time = datetime.datetime.now(); ";
-    string message = "print('The time taken to evaluate F" + tsc + " has been ',";
-    retval += (message + "int((end_time - start_time).total_seconds() * 1000), ' milliseconds.')\n");
+    if(timer_switch){
+      retval += "end_time = datetime.datetime.now(); ";
+      string message = "print('The time taken to evaluate F" + tsc + " has been ',";
+      retval += (message + "int((end_time - start_time).total_seconds()), ' seconds.')\n");
+    }
     for(int i = start; i < end; i++) retval += "I" + to_string(i) + " = None; ";
     retval += "F" + tsc + " = None;\n";
     return retval;
@@ -174,7 +178,7 @@ if(tens.size() > 1){
     else{
         string retval;
         auto tsc = to_string(fcounter);
-        retval += "start_time = datetime.datetime.now()\n";
+        if(timer_switch) retval += start_messg;
         retval += "F" + tsc + " = np.einsum('" + vvs[0][0] + "->" +
         vvs[0][0] + "'," + tens[0] + ")\n";
         if(coeff != "1.0"){
@@ -183,9 +187,11 @@ if(tens.size() > 1){
         }
         if(fcounter == 0) retval += "S = F0\n";
         else retval += "S += F" + tsc + "\n";
-        retval += "end_time = datetime.datetime.now(); ";
-        string message = "print('The time taken to evaluate F" + tsc + " has been ',";
-        retval += (message + "int((end_time - start_time).total_seconds() * 1000), ' milliseconds.')\n");
+        if(timer_switch){
+          retval += "end_time = datetime.datetime.now(); ";
+          string message = "print('The time taken to evaluate F" + tsc + " has been ',";
+          retval += (message + "int((end_time - start_time).total_seconds()), ' seconds.')\n");
+        }
         retval += "F" + tsc + " = None;\n";
         return retval;
     }
@@ -205,6 +211,7 @@ return retval;
 
 int main(int argc, const char** argv) {
   string s(argv[1]);
+  timer_switch = atoi(argv[2]);
   ios_base::sync_with_stdio(false);
   cin.tie(NULL);
   ifstream infile(s);

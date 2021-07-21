@@ -2,7 +2,7 @@
 
 
 PYTHON_INPUT_FILE=$1
-
+TIMER_SWITCH=$2
 
 clear
 echo "Welcome to Intermediate Code Generation program"
@@ -24,7 +24,7 @@ CPP_INPUT_FILE="$PREFIX$PYTHON_INPUT_FILE"
 echo "CPP Input File : $CPP_INPUT_FILE"
 
 echo "Running C++ code"
-./ffg $CPP_INPUT_FILE
+./ffg $CPP_INPUT_FILE $TIMER_SWITCH
 
 
 echo "Run Complete. Removing $CPP_INPUT_FILE"
