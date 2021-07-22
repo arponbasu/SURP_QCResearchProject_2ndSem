@@ -23,11 +23,14 @@ python3 $PYTHON_SCRIPT_NAME $PYTHON_INPUT_FILE
 CPP_INPUT_FILE="$PREFIX$PYTHON_INPUT_FILE"
 echo "CPP Input File : $CPP_INPUT_FILE"
 
-echo "Running C++ code"
+#echo "Generating C++ executable (Note1 :- This step may cause problems if you are not on a Linux machine; Note2 :- This may take a few seconds to execute)"
+#g++ -o ffg *.cpp *.h -std=c++11
+
+echo "Running C++ code..."
 ./ffg $CPP_INPUT_FILE $TIMER_SWITCH
 
 
-echo "Run Complete. Removing $CPP_INPUT_FILE"
+echo "Run Complete. Removing $CPP_INPUT_FILE ..."
 
 
 rm -f $CPP_INPUT_FILE
