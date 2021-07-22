@@ -169,12 +169,12 @@ if(tens.size() > 1){
     else retval += "S += F" + tsc + "\n";
     if(timer_switch){
       retval += "end_time = datetime.datetime.now(); ";
-      string message = "print('The time taken to evaluate F" + tsc + " has been ',";
+      string message = "timer('The time taken to evaluate F" + tsc + " has been ',";
       retval += (message + "int((end_time - start_time).total_seconds()), ' seconds.')\n");
     }
     else {
       retval += "# end_time = datetime.datetime.now(); ";
-      string message = "print('The time taken to evaluate F" + tsc + " has been ',";
+      string message = "timer('The time taken to evaluate F" + tsc + " has been ',";
       retval += (message + "int((end_time - start_time).total_seconds()), ' seconds.')\n");
     }
     for(int i = start; i < end; i++) retval += "I" + to_string(i) + " = None; ";
@@ -196,7 +196,7 @@ if(tens.size() > 1){
         else retval += "S += F" + tsc + "\n";
         if(timer_switch){
           retval += "# end_time = datetime.datetime.now(); ";
-          string message = "print('The time taken to evaluate F" + tsc + " has been ',";
+          string message = "timer('The time taken to evaluate F" + tsc + " has been ',";
           retval += (message + "int((end_time - start_time).total_seconds()), ' seconds.')\n");
         }
         retval += "F" + tsc + " = None;\n";
@@ -208,7 +208,7 @@ if(tens.size() > 1){
 string writeCodeFullFile (vector<string> &ind, vector<string> &tens, vector<string> &coeff, int num = 0){
 auto tensors = obtainIndlist(tens);
 auto apc = allPossibleContractions(collateReducedTraverseLogsTest(ind));//apc is vrtl.
-string retval = "import numpy as np\nimport datetime\n";
+string retval = "import numpy as np\nimport datetime\ndef timer (s1,x,s2):\n\tif x >= 5:\n\t\tprint(s1,x,s2)\n";
 auto x = apc[num];
 long unsigned int xs = x.size();
 for(long unsigned int i = 0; i < xs; i++) retval += writeCode(x[i],tensors[i],coeff[i]);
