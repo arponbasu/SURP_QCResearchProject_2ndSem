@@ -1,0 +1,1 @@
+- f^{j}_{a} l^{}_{j} t^{a}_{i} - f^{j}_{i} l^{}_{j} + l^{}_{j} t^{a}_{k} t^{b}_{i} v^{jk}_{ab} - l^{}_{j} t^{a}_{k} v^{jk}_{ia} - \frac{l^{}_{j} t^{ab}_{ik} v^{jk}_{ab}}{2}
