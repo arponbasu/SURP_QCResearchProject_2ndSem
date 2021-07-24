@@ -130,11 +130,11 @@ if(tens.size() > 1){
       auto tscn = to_string(cnt);
 
       if(temp[sec][0] == 't' || temp[sec][0] == 'r'){
-        retval += "I" + tscn + " = np.einsum('" + vvsi[fir] + "," + vvsi[sec] + "->" +
+        retval += "\tI" + tscn + " = np.einsum('" + vvsi[fir] + "," + vvsi[sec] + "->" +
         vvsi1[vvsi1.size()-1] + "'," + temp[fir] + "," + temp[sec] + ")\n";//ORIGINAL
       }
       else{
-        retval += "I" + tscn + " = np.einsum('" + vvsi[sec] + "," + vvsi[fir] + "->" +
+        retval += "\tI" + tscn + " = np.einsum('" + vvsi[sec] + "," + vvsi[fir] + "->" +
         vvsi1[vvsi1.size()-1] + "'," + temp[sec] + "," + temp[fir] + ")\n";
       }
 
@@ -152,33 +152,33 @@ if(tens.size() > 1){
     auto tsc = to_string(fcounter);
 
     if(temp[sec][0] == 't' || temp[sec][0] == 'r'){
-      retval += "F" + tsc + " = np.einsum('" + vvsi[fir] + "," + vvsi[sec] + "->" +
+      retval += "\tF" + tsc + " = np.einsum('" + vvsi[fir] + "," + vvsi[sec] + "->" +
       vvsi1[vvsi1.size()-1] + "'," + temp[fir] + "," + temp[sec] + ")\n";//ORIGINAL
     }
     else{
-      retval += "F" + tsc + " = np.einsum('" + vvsi[sec] + "," + vvsi[fir] + "->" +
+      retval += "\tF" + tsc + " = np.einsum('" + vvsi[sec] + "," + vvsi[fir] + "->" +
       vvsi1[vvsi1.size()-1] + "'," + temp[sec] + "," + temp[fir] + ")\n";
     }
 
 
     if(coeff != "1.0"){
-      if(coeff == "-1.0") retval += "F" + tsc + " *= (-1)\n";
-      else retval += "F" + tsc + " /= (" + coeff + ")\n";
+      if(coeff == "-1.0") retval += "\tF" + tsc + " *= (-1)\n";
+      else retval += "\tF" + tsc + " /= (" + coeff + ")\n";
     }
-    if(fcounter == 0) retval += "S = F0\n";
-    else retval += "S += F" + tsc + "\n";
+    if(fcounter == 0) retval += "\tS = F0\n";
+    else retval += "\tS += F" + tsc + "\n";
     if(timer_switch){
-      retval += "end_time = datetime.datetime.now(); ";
+      retval += "\tend_time = datetime.datetime.now(); ";
       string message = "timer('The time taken to evaluate F" + tsc + " has been ',";
       retval += (message + "int((end_time - start_time).total_seconds()), ' seconds.')\n");
     }
     else {
-      retval += "# end_time = datetime.datetime.now(); ";
+      retval += "\t# end_time = datetime.datetime.now(); ";
       string message = "timer('The time taken to evaluate F" + tsc + " has been ',";
       retval += (message + "int((end_time - start_time).total_seconds()), ' seconds.')\n");
     }
-    for(int i = start; i < end; i++) retval += "I" + to_string(i) + " = None; ";
-    retval += "F" + tsc + " = None;\n";
+    for(int i = start; i < end; i++) retval += "\tI" + to_string(i) + " = None; ";
+    retval += "\tF" + tsc + " = None;\n";
     return retval;
     }
     else{
@@ -186,32 +186,37 @@ if(tens.size() > 1){
         auto tsc = to_string(fcounter);
         if(timer_switch) retval += "start_time = datetime.datetime.now()\n";
         else retval += "# start_time = datetime.datetime.now()\n";
-        retval += "F" + tsc + " = np.einsum('" + vvs[0][0] + "->" +
+        retval += "\tF" + tsc + " = np.einsum('" + vvs[0][0] + "->" +
         vvs[0][0] + "'," + tens[0] + ")\n";
         if(coeff != "1.0"){
           if(coeff == "-1.0") retval += "F" + tsc + " *= (-1)\n";
-          else retval += "F" + tsc + " /= (" + coeff + ")\n";
+          else retval += "\tF" + tsc + " /= (" + coeff + ")\n";
         }
         if(fcounter == 0) retval += "S = F0\n";
-        else retval += "S += F" + tsc + "\n";
+        else retval += "\tS += F" + tsc + "\n";
         if(timer_switch){
-          retval += "# end_time = datetime.datetime.now(); ";
+          retval += "\t# end_time = datetime.datetime.now(); ";
           string message = "timer('The time taken to evaluate F" + tsc + " has been ',";
           retval += (message + "int((end_time - start_time).total_seconds()), ' seconds.')\n");
         }
-        retval += "F" + tsc + " = None;\n";
+        retval += "\tF" + tsc + " = None;\n";
         return retval;
     }
 
 
 }
-string writeCodeFullFile (vector<string> &ind, vector<string> &tens, vector<string> &coeff, int num = 0){
+string writeCodeFullFile (const vector<string> &ind, const vector<string> &tens, const vector<string> &coeff, const vector<string> exp, int num = 0){
 auto tensors = obtainIndlist(tens);
 auto apc = allPossibleContractions(collateReducedTraverseLogsTest(ind));//apc is vrtl.
-string retval = "import numpy as np\nimport datetime\ndef timer (s1,x,s2):\n\tif x >= 5:\n\t\tprint(s1,x,s2)\n";
+string retval = "\timport numpy as np\n\timport datetime\n\tdef timer (s1,x,s2):\n\t\tif x >= 5:\n\t\t\tprint(s1,x,s2)\n";
 auto x = apc[num];
 long unsigned int xs = x.size();
-for(long unsigned int i = 0; i < xs; i++) retval += writeCode(x[i],tensors[i],coeff[i]);
+for(long unsigned int i = 0; i < xs; i++) {
+  retval += "\t# The code for the expression ";
+  retval += exp[i];
+  retval += " is as follows : \n\t";
+  retval += writeCode(x[i],tensors[i],coeff[i]);
+}
 return retval;
 }
 
@@ -227,14 +232,15 @@ int main(int argc, const char** argv) {
   cin.tie(NULL);
   ifstream infile(s);
   string line;
-  vector<string> ind, tens, coeff;
+  vector<string> ind, tens, coeff, exp;
   while (getline(infile, line)) {
     vector<string> strs;
     boost::split(strs, line, boost::is_any_of("|"));
-    string s0 = strs[0], s1 = strs[1], s2 = strs[2];
+    string s0 = strs[0], s1 = strs[1], s2 = strs[2], s3 = strs[3];
     ind.push_back(s0);
     tens.push_back(s1);
     coeff.push_back(s2);
+    exp.push_back(s3);
   }
 
   for(int i = 0; i < 4; i++) s.pop_back();
@@ -249,7 +255,7 @@ int main(int argc, const char** argv) {
         return 1;
   }
 
-  fs << writeCodeFullFile(ind,tens,coeff);
+  fs << writeCodeFullFile(ind,tens,coeff,exp);
   fs.close();
   return 0;
 }

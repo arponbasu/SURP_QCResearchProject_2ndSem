@@ -108,6 +108,8 @@ def charHash (c):
         return 3
     elif c == 'r':
         return 4
+    elif c == 'l':
+        return 5
 
 def reversecharHash (n):
     if n == 1:
@@ -118,6 +120,8 @@ def reversecharHash (n):
         return 't'
     elif n == 4:
         return 'r'
+    elif n == 5:
+        return 'l'
 
 
 
@@ -141,6 +145,11 @@ def nameTensors (tens, indlist):
                tens[j] = 'r1'
             elif h == 3:
                tens[j] = 'r2'
+        elif tens[j] == 'l':
+            if h == 1:
+               tens[j] = 'l1'
+            elif h == 3:
+               tens[j] = 'l2'
         elif tens[j] == 'v':
             tens[j] = transcribe(indlist[j],'v')
         elif tens[j] == 'f':
@@ -149,6 +158,7 @@ def nameTensors (tens, indlist):
     return tens
 
 def generatecppInput (exp,prf):
+    temp = exp    
     indices = []
     tensors = []
     for individual in ((uniPerm(exp)[0][0]).replace('}_{','').split()):
@@ -157,7 +167,7 @@ def generatecppInput (exp,prf):
     ss = sortShuffle (tensors, indices)
     tensors = ss[0]
     indices = ss[1]  
-    return (collateList(indices) + "|" + collateList(nameTensors(tensors,indices)) + "|" + str(prf))
+    return (collateList(indices) + "|" + collateList(nameTensors(tensors,indices)) + "|" + str(prf) + "|" + temp)
 
 
 def generatecppInputFull (exp, sgn):
