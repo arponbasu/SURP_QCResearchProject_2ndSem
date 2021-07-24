@@ -205,18 +205,13 @@ if(tens.size() > 1){
 
 
 }
-string writeCodeFullFile (const vector<string> &ind, const vector<string> &tens, const vector<string> &coeff, const vector<string> exp, int num = 0){
+string writeCodeFullFile (vector<string> &ind, vector<string> &tens, vector<string> &coeff, int num = 0){
 auto tensors = obtainIndlist(tens);
 auto apc = allPossibleContractions(collateReducedTraverseLogsTest(ind));//apc is vrtl.
 string retval = "import numpy as np\nimport datetime\ndef timer (s1,x,s2):\n\tif x >= 5:\n\t\tprint(s1,x,s2)\n";
 auto x = apc[num];
 long unsigned int xs = x.size();
-for(long unsigned int i = 0; i < xs; i++) {
-  retval += "# The code for the expression ";
-  retval += exp[i];
-  retval += " is as follows : \n";
-  retval += writeCode(x[i],tensors[i],coeff[i]);
-}
+for(long unsigned int i = 0; i < xs; i++) retval += writeCode(x[i],tensors[i],coeff[i]);
 return retval;
 }
 
@@ -232,15 +227,14 @@ int main(int argc, const char** argv) {
   cin.tie(NULL);
   ifstream infile(s);
   string line;
-  vector<string> ind, tens, coeff, exp;
+  vector<string> ind, tens, coeff;
   while (getline(infile, line)) {
     vector<string> strs;
     boost::split(strs, line, boost::is_any_of("|"));
-    string s0 = strs[0], s1 = strs[1], s2 = strs[2], s3 = strs[3];
+    string s0 = strs[0], s1 = strs[1], s2 = strs[2];
     ind.push_back(s0);
     tens.push_back(s1);
     coeff.push_back(s2);
-    exp.push_back(s3);
   }
 
   for(int i = 0; i < 4; i++) s.pop_back();
@@ -255,7 +249,7 @@ int main(int argc, const char** argv) {
         return 1;
   }
 
-  fs << writeCodeFullFile(ind,tens,coeff,exp);
+  fs << writeCodeFullFile(ind,tens,coeff);
   fs.close();
   return 0;
 }

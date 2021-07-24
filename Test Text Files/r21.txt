@@ -1,3 +1,0 @@
-f^{k}_{b} r^{}_{k} t^{ab}_{ij} - r^{}_{k} t^{b}_{l} t^{ac}_{ij} v^{kl}_{bc} + r^{}_{k} t^{b}_{i} t^{c}_{j} t^{a}_{l} v^{kl}_{bc} + r^{}_{k} t^{b}_{i} t^{c}_{j} v^{ak}_{bc} - r^{}_{k} t^{b}_{i} t^{a}_{l} v^{kl}_{jb} - r^{}_{k} t^{b}_{i} t^{ac}_{jl} v^{kl}_{bc} - r^{}_{k} t^{b}_{i} v^{ak}_{jb} + r^{}_{k} t^{b}_{j} t^{a}_{l} v^{kl}_{ib} + r^{}_{k} t^{b}_{j} t^{ac}_{il} v^{kl}_{bc} + r^{}_{k} t^{b}_{j} v^{ak}_{ib} + \frac{r^{}_{k} t^{a}_{l} t^{bc}_{ij} v^{kl}_{bc}}{2} + r^{}_{k} t^{a}_{l} v^{kl}_{ij} + \frac{r^{}_{k} t^{bc}_{ij} v^{ak}_{bc}}{2} + r^{}_{k} t^{ab}_{il} v^{kl}_{jb} - r^{}_{k} t^{ab}_{jl} v^{kl}_{ib} + r^{}_{k} v^{ak}_{ij}
-
-

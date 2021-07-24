@@ -149,7 +149,6 @@ def nameTensors (tens, indlist):
     return tens
 
 def generatecppInput (exp,prf):
-    temp = exp    
     indices = []
     tensors = []
     for individual in ((uniPerm(exp)[0][0]).replace('}_{','').split()):
@@ -158,7 +157,7 @@ def generatecppInput (exp,prf):
     ss = sortShuffle (tensors, indices)
     tensors = ss[0]
     indices = ss[1]  
-    return (collateList(indices) + "|" + collateList(nameTensors(tensors,indices)) + "|" + str(prf) + "|" + temp)
+    return (collateList(indices) + "|" + collateList(nameTensors(tensors,indices)) + "|" + str(prf))
 
 
 def generatecppInputFull (exp, sgn):
