@@ -1,0 +1,1 @@
+f^{i}_{a} t^{a}_{i} - \frac{t^{a}_{j} t^{b}_{i} v^{ij}_{ab}}{2} + \frac{t^{ab}_{ij} v^{ij}_{ab}}{4}
