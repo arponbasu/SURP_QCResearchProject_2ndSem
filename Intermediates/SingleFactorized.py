@@ -136,8 +136,6 @@ def nameTensors (tens, indlist):
                tens[j] = 't1'
             elif h == 4:
                tens[j] = 't2'
-            elif h == 6:
-               tens[j] = 't3'
         elif tens[j] == 'r':
             if h == 1:
                tens[j] = 'r1'
