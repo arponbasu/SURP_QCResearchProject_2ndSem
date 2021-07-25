@@ -129,7 +129,7 @@ if(tens.size() > 1){
       auto fir = m.first, sec = m.second;
       auto tscn = to_string(cnt);
 
-      if(temp[sec][0] == 't' || temp[sec][0] == 'r'){
+      if(temp[sec][0] == 't' || temp[sec][0] == 'r' || temp[sec][0] == 'l'){
         retval += "\tI" + tscn + " = np.einsum('" + vvsi[fir] + "," + vvsi[sec] + "->" +
         vvsi1[vvsi1.size()-1] + "'," + temp[fir] + "," + temp[sec] + ")\n";//ORIGINAL
       }
@@ -151,7 +151,7 @@ if(tens.size() > 1){
     auto fir = m.first, sec = m.second;
     auto tsc = to_string(fcounter);
 
-    if(temp[sec][0] == 't' || temp[sec][0] == 'r'){
+    if(temp[sec][0] == 't' || temp[sec][0] == 'r'|| temp[sec][0] == 'l'){
       retval += "\tF" + tsc + " = np.einsum('" + vvsi[fir] + "," + vvsi[sec] + "->" +
       vvsi1[vvsi1.size()-1] + "'," + temp[fir] + "," + temp[sec] + ")\n";//ORIGINAL
     }
