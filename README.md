@@ -38,6 +38,8 @@ final expression (which in this case will only contain the index 'i'). 'O' and '
 Orbitals, and terms like O(O^2V^2) denote the time it would take, in the big-O notation, to perform the contraction shown. The cost of two contractions is compared under the
 assumption V > O, as recommended by the Guide Achintya Kumar Dutta.
 
+Also note that if your tensor contraction contains any two tensors which could contract with each other to give a scalar, say like r^{}\_{j} t^{a}\_{k} t^{k}\_{a} v^{jk}\_{ab}, then this program throws a segmentation fault. This error has been properly dealt with within the Intermediates folder, but for this program we recommend that the user avoid such expressions.
+
 Even though tampering with the code is generally not advisable, if you're curious and want to see _*all*_ possible contractions that an index list could have (this would be
 a large number, and would include within itself the cheapest contractions too), open the file, go to the main function, replace the line "display(keepMinimum(traverse(processArgument(argc,argv))));"
 by "display(traverse(processArgument(argc,argv)));", save the file and run the program as above.
